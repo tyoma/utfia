@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="UTF8Tests.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Library Headers">
+      <UniqueIdentifier>{c5e47716-ffa2-48f9-9832-e7ea7ca102a1}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\utfia\config.h">
+      <Filter>Library Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\utfia\iterator.h">
+      <Filter>Library Headers</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
