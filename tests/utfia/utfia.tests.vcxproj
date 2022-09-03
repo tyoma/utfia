@@ -33,7 +33,7 @@
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <ItemGroup>
-    <ClCompile Include="UTF8Tests.cpp" />
+    <ClCompile Include="UTF8IterationTests.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\utfia\config.h" />

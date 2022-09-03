@@ -22,6 +22,8 @@
 
 #include "config.h"
 
+#include <cstddef>
+
 namespace utfia
 {
 	struct utf8
@@ -29,28 +31,29 @@ namespace utfia
 		typedef unsigned int codepoint;
 
 		template <typename CharIteratorT>
-		static codepoint next(CharIteratorT &iterator, CharIteratorT end, codepoint invalid = '?');
+		static codepoint next(CharIteratorT &iterator, CharIteratorT end);
 
 	private:
 		template <typename CharIteratorT>
-		static codepoint next_slow(CharIteratorT &iterator, CharIteratorT end, codepoint c, codepoint invalid);
+		static codepoint next_slow(CharIteratorT &iterator, std::size_t max_remainder, codepoint c);
 	};
 
 
 
 	template <typename CharIteratorT>
-	UTFIA_INLINE utf8::codepoint utf8::next(CharIteratorT &iterator, CharIteratorT end, codepoint invalid)
+	UTFIA_INLINE utf8::codepoint utf8::next(CharIteratorT &iterator, CharIteratorT end)
 	{
-		codepoint c = static_cast<unsigned char>(*iterator);
+		codepoint c = static_cast<unsigned char>(*iterator++);
 
-		++iterator;
-		return c < 0x80 ? c : next_slow(iterator, end, c, invalid);
+		return c < 0x80 ? c : next_slow(iterator, end - iterator, c);
 	}
 
 	template <typename CharIteratorT>
-	UTFIA_AVOID_INLINE inline utf8::codepoint utf8::next_slow(CharIteratorT &iterator, CharIteratorT end, codepoint c, codepoint invalid)
+	utf8::codepoint utf8::next_slow(CharIteratorT &iterator, std::size_t max_remainder, codepoint c)
 	{
 		typedef unsigned char uchar;
+
+		enum {	invalid = 0xFFFD	};
 
 		uchar remainder;
 
@@ -64,19 +67,18 @@ namespace utfia
 			remainder = 3, c &= 0x07;
 		else
 			return invalid;
+		if (max_remainder < remainder)
+			return iterator += max_remainder, invalid;
 
-		for (bool continuation_valid = true; remainder--; ++iterator)
+		do
 		{
-			if (iterator == end)
+			const uchar continuation = static_cast<uchar>(*iterator++);
+
+			if ((continuation & 0xC0) != 0x80)
 				return invalid;
-
-			const uchar continuation = static_cast<uchar>(*iterator);
-
-			if (((continuation & 0xC0) == 0x80) & continuation_valid)
-				c <<= 6, c += continuation & 0x3F;
-			else
-				continuation_valid = false, c = invalid;
-		}
+			c <<= 6;
+			c += continuation & 0x3F;
+		} while (--remainder);
 		return c;
 	}
 }

@@ -7,6 +7,11 @@ namespace utfia
 {
 	namespace tests
 	{
+		namespace
+		{
+			const utf8::codepoint c_invalid = 0xFFFD;
+		}
+
 		begin_test_suite( UTF8IterationTests )
 			test( ANSICharactersAreReadAsIs )
 			{
@@ -34,10 +39,10 @@ namespace utfia
 					char *const end = iterator + 1;
 
 				// ACT / ASSERT
-					assert_equal(static_cast<utf8::codepoint>('?'), utf8::next(iterator, end));
+					assert_equal(c_invalid, utf8::next(iterator, end));
 					assert_equal(end, iterator);
 					iterator = &c;
-					assert_equal(0x12345u, utf8::next(iterator, end, 0x12345u));
+					assert_equal(c_invalid, utf8::next(iterator, end));
 					assert_equal(end, iterator);
 				}
 				for (unsigned int i = 0xF8u; i != 0x100u; ++i)
@@ -48,7 +53,7 @@ namespace utfia
 					char *const end = iterator + 1;
 
 				// ACT / ASSERT
-					assert_equal(static_cast<utf8::codepoint>('?'), utf8::next(iterator, end));
+					assert_equal(c_invalid, utf8::next(iterator, end));
 					assert_equal(end, iterator);
 				}
 			}
@@ -81,22 +86,22 @@ namespace utfia
 
 				// ACT / ASSERT
 				c[0] = '\xC0', iterator = c;
-				assert_equal(static_cast<utf8::codepoint>('?'), utf8::next(iterator, c + 1));
+				assert_equal(c_invalid, utf8::next(iterator, c + 1));
 				assert_equal(c + 1, iterator);
 				c[0] = '\xDF', iterator = c;
-				assert_equal(static_cast<utf8::codepoint>('z'), utf8::next(iterator, c + 1, 'z'));
+				assert_equal(c_invalid, utf8::next(iterator, c + 1));
 				assert_equal(c + 1, iterator);
 				c[0] = '\xE0', iterator = c;
-				assert_equal(static_cast<utf8::codepoint>('?'), utf8::next(iterator, c + 2));
+				assert_equal(c_invalid, utf8::next(iterator, c + 2));
 				assert_equal(c + 2, iterator);
 				c[0] = '\xEF', iterator = c;
-				assert_equal(static_cast<utf8::codepoint>('z'), utf8::next(iterator, c + 2, 'z'));
+				assert_equal(c_invalid, utf8::next(iterator, c + 2));
 				assert_equal(c + 2, iterator);
 				c[0] = '\xF0', iterator = c;
-				assert_equal(static_cast<utf8::codepoint>('?'), utf8::next(iterator, c + 3));
+				assert_equal(c_invalid, utf8::next(iterator, c + 3));
 				assert_equal(c + 3, iterator);
 				c[0] = '\xF7', iterator = c;
-				assert_equal(static_cast<utf8::codepoint>('z'), utf8::next(iterator, c + 3, 'z'));
+				assert_equal(c_invalid, utf8::next(iterator, c + 3));
 				assert_equal(c + 3, iterator);
 			}
 
@@ -111,10 +116,10 @@ namespace utfia
 
 			// ACT / ASSERT
 					c[0] = '\xC0', iterator = c;
-					assert_equal(static_cast<utf8::codepoint>('?'), utf8::next(iterator, c + 10));
+					assert_equal(c_invalid, utf8::next(iterator, c + 10));
 					assert_equal(c + 2, iterator);
 					c[0] = '\xDF', iterator = c;
-					assert_equal(static_cast<utf8::codepoint>('?'), utf8::next(iterator, c + 10));
+					assert_equal(c_invalid, utf8::next(iterator, c + 10));
 					assert_equal(c + 2, iterator);
 				}
 				for (unsigned int i = 0xC0u; i != 0x100u; ++i)
@@ -125,10 +130,10 @@ namespace utfia
 
 			// ACT / ASSERT
 					c[0] = '\xC0', iterator = c;
-					assert_equal(static_cast<utf8::codepoint>('?'), utf8::next(iterator, c + 10));
+					assert_equal(c_invalid, utf8::next(iterator, c + 10));
 					assert_equal(c + 2, iterator);
 					c[0] = '\xDF', iterator = c;
-					assert_equal(static_cast<utf8::codepoint>('?'), utf8::next(iterator, c + 10));
+					assert_equal(c_invalid, utf8::next(iterator, c + 10));
 					assert_equal(c + 2, iterator);
 				}
 				for (unsigned int i = 0xC0u; i != 0x100u; ++i)
@@ -139,11 +144,11 @@ namespace utfia
 
 			// ACT / ASSERT
 					c[0] = '\xE0', iterator = c;
-					assert_equal(static_cast<utf8::codepoint>('?'), utf8::next(iterator, c + 10));
-					assert_equal(c + 3, iterator);
+					assert_equal(c_invalid, utf8::next(iterator, c + 10));
+					assert_equal(c + 2, iterator);
 					c[0] = '\xEF', iterator = c;
-					assert_equal(static_cast<utf8::codepoint>('?'), utf8::next(iterator, c + 10));
-					assert_equal(c + 3, iterator);
+					assert_equal(c_invalid, utf8::next(iterator, c + 10));
+					assert_equal(c + 2, iterator);
 				}
 				for (unsigned int i = 0xC0u; i != 0x100u; ++i)
 				{
@@ -153,11 +158,11 @@ namespace utfia
 
 			// ACT / ASSERT
 					c[0] = '\xF0', iterator = c;
-					assert_equal(static_cast<utf8::codepoint>('?'), utf8::next(iterator, c + 10));
-					assert_equal(c + 4, iterator);
+					assert_equal(c_invalid, utf8::next(iterator, c + 10));
+					assert_equal(c + 2, iterator);
 					c[0] = '\xF7', iterator = c;
-					assert_equal(static_cast<utf8::codepoint>('?'), utf8::next(iterator, c + 10));
-					assert_equal(c + 4, iterator);
+					assert_equal(c_invalid, utf8::next(iterator, c + 10));
+					assert_equal(c + 2, iterator);
 				}
 			}
 
