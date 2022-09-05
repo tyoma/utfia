@@ -34,6 +34,11 @@ namespace utfia
 		static codepoint next(CharIteratorT &iterator, CharIteratorT end);
 
 	private:
+		typedef unsigned char uchar;
+
+		enum {	invalid = 0xFFFD	};
+
+	private:
 		template <typename CharIteratorT>
 		static codepoint next_slow(CharIteratorT &iterator, std::size_t max_remainder, codepoint c);
 	};
@@ -49,13 +54,10 @@ namespace utfia
 	}
 
 	template <typename CharIteratorT>
-	utf8::codepoint utf8::next_slow(CharIteratorT &iterator, std::size_t max_remainder, codepoint c)
+	inline utf8::codepoint utf8::next_slow(CharIteratorT &iterator, std::size_t max_remainder, codepoint c)
 	{
-		typedef unsigned char uchar;
-
-		enum {	invalid = 0xFFFD	};
-
-		uchar remainder;
+		std::size_t remainder;
+		CharIteratorT iterator_local = iterator;
 
 		if (c < 0xC0)
 			return invalid;
@@ -68,17 +70,17 @@ namespace utfia
 		else
 			return invalid;
 		if (max_remainder < remainder)
-			return iterator += max_remainder, invalid;
+			return iterator = iterator_local + max_remainder, invalid;
 
 		do
 		{
-			const uchar continuation = static_cast<uchar>(*iterator++);
+			const codepoint continuation = static_cast<uchar>(*iterator_local);
 
 			if ((continuation & 0xC0) != 0x80)
-				return invalid;
+				return iterator = iterator_local, invalid;
 			c <<= 6;
 			c += continuation & 0x3F;
-		} while (--remainder);
-		return c;
+		} while (iterator_local++, --remainder);
+		return iterator = iterator_local, c;
 	}
 }
