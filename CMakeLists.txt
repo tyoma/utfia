@@ -10,7 +10,7 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/_bin)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/_bin)
 
 add_compile_options(
-	"$<$<OR:$<CXX_COMPILER_ID:GNU>,$<CXX_COMPILER_ID:Clang>>:$<$<COMPILE_LANGUAGE:CXX>:-fPIC;-fshort-wchar;-Wpedantic;-Wall;-Wextra;-Wno-long-long>>"
+	"$<$<OR:$<CXX_COMPILER_ID:GNU>,$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>>:$<$<COMPILE_LANGUAGE:CXX>:-fPIC;-Wpedantic;-Wall;-Wextra;-Wno-long-long;-std=c++03>>"
 	"$<$<NOT:$<CXX_COMPILER_ID:MSVC>>:$<$<OR:$<CONFIG:Release>,$<CONFIG:RelWithDebInfo>>:-O3>>"
 	"$<$<CXX_COMPILER_ID:MSVC>:$<$<OR:$<CONFIG:Release>,$<CONFIG:RelWithDebInfo>>:-Ox;-W4>>"
 )

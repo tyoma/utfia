@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.13)
 
 set(UTFIA_TEST_SOURCES
+	StringTests.cpp
 	UTF8IterationTests.cpp
 )
 

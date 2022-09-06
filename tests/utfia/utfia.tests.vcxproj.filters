@@ -12,8 +12,12 @@
     <ClInclude Include="..\..\utfia\iterator.h">
       <Filter>Library Headers</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\utfia\string.h">
+      <Filter>Library Headers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="UTF8IterationTests.cpp" />
+    <ClCompile Include="StringTests.cpp" />
   </ItemGroup>
 </Project>

@@ -20,59 +20,23 @@
 
 #pragma once
 
-#include "config.h"
-
-#include <cstddef>
-
 namespace utfia
 {
-	struct utf8
+	template <typename T> inline typename T::const_iterator range_begin(const T &c) {	return c.begin();	}
+	template <typename T> inline typename T::const_iterator range_end(const T &c) {	return c.end();	}
+	template <typename E> inline E *range_begin(E *cstring) {	return cstring;	}
+	template <typename E> inline E *range_end(E *cstring) {	while (*cstring) cstring++;	return cstring;	}
+
+	template <typename NextT, typename I1, typename I2, typename P>
+	inline int compare(I1 first1, I1 last1, I2 first2, I2 last2, const P &predicate)
 	{
-		typedef unsigned int codepoint;
-
-		template <typename CharIteratorT>
-		static codepoint next(CharIteratorT &iterator, CharIteratorT end);
-
-	private:
-		typedef unsigned char uchar;
-
-		enum {	invalid = 0xFFFD	};
-	};
-
-
-
-	template <typename CharIteratorT>
-	UTFIA_INLINE utf8::codepoint utf8::next(CharIteratorT &iterator, CharIteratorT end)
-	{
-		codepoint c = static_cast<unsigned char>(*iterator++);
-
-		if (c < 0x80)
-			return c;
-
-		std::ptrdiff_t remainder;
-
-		if (c < 0xC0)
-			return invalid;
-		else if (c < 0xE0)
-			remainder = 1, c &= 0x1F;
-		else if (c < 0xF0)
-			remainder = 2, c &= 0x0F;
-		else if (c < 0xF8)
-			remainder = 3, c &= 0x07;
-		else
-			return invalid;
-		if (end - iterator < remainder)
-			return iterator = end, invalid;
-
-		do
-		{
-			const codepoint continuation = static_cast<uchar>(*iterator);
-
-			if ((continuation & 0xC0) != 0x80)
-				return invalid;
-			c <<= 6;
-			c += continuation & 0x3F;
-		} while (iterator++, --remainder);
-		return c;
+		while ((first1 != last1) & (first2 != last2))
+			if (int result = predicate(NextT::next(first1, last1), NextT::next(first2, last2)))
+				return result;
+		return first2 != last2 ? -1 : first1 != last1 ? 1 : 0;
 	}
+
+	template <typename NextT, typename T1, typename T2, typename P>
+	inline int compare(const T1 &lhs, const T2 &rhs, const P &predicate)
+	{	return compare<NextT>(range_begin(lhs), range_end(lhs), range_begin(rhs), range_end(rhs), predicate);	}
 }

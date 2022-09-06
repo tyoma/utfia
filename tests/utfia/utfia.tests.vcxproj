@@ -33,11 +33,13 @@
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <ItemGroup>
+    <ClCompile Include="StringTests.cpp" />
     <ClCompile Include="UTF8IterationTests.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\utfia\config.h" />
     <ClInclude Include="..\..\utfia\iterator.h" />
+    <ClInclude Include="..\..\utfia\string.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
 </Project>
