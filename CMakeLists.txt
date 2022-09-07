@@ -10,9 +10,9 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/_bin)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/_bin)
 
 add_compile_options(
-	"$<$<OR:$<CXX_COMPILER_ID:GNU>,$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>>:$<$<COMPILE_LANGUAGE:CXX>:-fPIC;-Wpedantic;-Wall;-Wextra;-Wno-long-long;-std=c++03>>"
-	"$<$<NOT:$<CXX_COMPILER_ID:MSVC>>:$<$<OR:$<CONFIG:Release>,$<CONFIG:RelWithDebInfo>>:-O3>>"
-	"$<$<CXX_COMPILER_ID:MSVC>:$<$<OR:$<CONFIG:Release>,$<CONFIG:RelWithDebInfo>>:-Ox;-W4>>"
+	"$<$<CXX_COMPILER_ID:GNU,Clang,AppleClang>:-fPIC;-Wpedantic;-Wall;-Wextra;-Wno-long-long;-std=c++03>"
+	"$<$<NOT:$<CXX_COMPILER_ID:MSVC>>:$<$<CONFIG:Release,RelWithDebInfo>:-O3>>"
+	"$<$<CXX_COMPILER_ID:MSVC>:$<$<CONFIG:Release,RelWithDebInfo>:-Ox;-W4>>"
 )
 add_definitions(-D_SCL_SECURE_NO_WARNINGS -D_CRT_SECURE_NO_WARNINGS)
 
